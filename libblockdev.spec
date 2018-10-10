@@ -3,12 +3,12 @@
 #
 Summary:	A library for low-level manipulation with block devices
 Name:		libblockdev
-Version:	2.15
+Version:	2.20
 Release:	1
 License:	LGPL v2+
 Group:		Libraries
 Source0:	https://github.com/storaged-project/libblockdev/releases/download/%{version}-1/%{name}-%{version}.tar.gz
-# Source0-md5:	974bc075e696d54b0a6d2905231185d1
+# Source0-md5:	d745bd792e07e00f3d579514167d0fed
 URL:		https://github.com/storaged-project/libblockdev
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -180,6 +180,15 @@ Requires:	multipath-tools
 The libblockdev library plugin providing the functionality related to
 multipath devices.
 
+%package nvdimm
+Summary:	The nvdimm plugin for the libblockdev library
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+
+%description nvdimm
+The libblockdev library plugin providing the functionality related to
+nvdimm devices.
+
 %package part
 Summary:	The partitioning plugin for the libblockdev library
 Group:		Libraries
@@ -201,6 +210,15 @@ Requires:	util-linux
 %description swap
 The libblockdev library plugin providing the functionality related to
 swap devices.
+
+%package vdo
+Summary:	The vdo plugin for the libblockdev library
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+
+%description vdo
+The libblockdev library plugin providing the functionality related to
+vdo devices.
 
 %package plugins
 Summary:	Meta-package that pulls all the libblockdev plugins as dependencies
@@ -304,15 +322,21 @@ rm -rf $RPM_BUILD_ROOT
 %post mpath -p /sbin/ldconfig
 %postun mpath -p /sbin/ldconfig
 
+%post nvdimm -p /sbin/ldconfig
+%postun nvdimm -p /sbin/ldconfig
+
 %post part -p /sbin/ldconfig
 %postun part -p /sbin/ldconfig
 
 %post swap -p /sbin/ldconfig
 %postun swap -p /sbin/ldconfig
 
+%post vdo -p /sbin/ldconfig
+%postun vdo -p /sbin/ldconfig
+
 %files
 %defattr(644,root,root,755)
-%doc features.rst specs.rst roadmap.rst
+%doc features.rst specs.rst
 %attr(755,root,root) %{_libdir}/libbd_part_err.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libbd_part_err.so.2
 %attr(755,root,root) %{_libdir}/libbd_utils.so.*.*.*
@@ -336,10 +360,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libbd_lvm-dbus.so
 %attr(755,root,root) %{_libdir}/libbd_mdraid.so
 %attr(755,root,root) %{_libdir}/libbd_mpath.so
+%attr(755,root,root) %{_libdir}/libbd_nvdimm.so
 %attr(755,root,root) %{_libdir}/libbd_part.so
 %attr(755,root,root) %{_libdir}/libbd_part_err.so
 %attr(755,root,root) %{_libdir}/libbd_swap.so
 %attr(755,root,root) %{_libdir}/libbd_utils.so
+%attr(755,root,root) %{_libdir}/libbd_vdo.so
 %attr(755,root,root) %{_libdir}/libblockdev.so
 %{_includedir}/blockdev
 %{_datadir}/gir-1.0/BlockDev-2.0.gir
@@ -403,6 +429,11 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libbd_mpath.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libbd_mpath.so.2
 
+%files nvdimm
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_nvdimm.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libbd_nvdimm.so.2
+
 %files part
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_part.so.*.*.*
@@ -412,6 +443,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_swap.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libbd_swap.so.2
+
+%files vdo
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_vdo.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libbd_vdo.so.2
 
 %files plugins
 %defattr(644,root,root,755)
