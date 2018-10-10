@@ -233,8 +233,10 @@ Requires:	%{name}-lvm = %{version}-%{release}
 Requires:	%{name}-lvm-dbus = %{version}-%{release}
 Requires:	%{name}-mdraid = %{version}-%{release}
 Requires:	%{name}-mpath = %{version}-%{release}
+Requires:	%{name}-nvdimm = %{version}-%{release}
 Requires:	%{name}-part = %{version}-%{release}
 Requires:	%{name}-swap = %{version}-%{release}
+Requires:	%{name}-vdo = %{version}-%{release}
 
 %description plugins
 A meta-package that pulls all the libblockdev plugins as dependencies.
