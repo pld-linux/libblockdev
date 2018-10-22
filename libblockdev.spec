@@ -23,6 +23,7 @@ BuildRequires:	libblkid-devel >= 2.23.0
 BuildRequires:	libbytesize-devel >= 0.1
 BuildRequires:	libmount-devel >= 2.23.0
 BuildRequires:	libtool
+BuildRequires:	ndctl-devel
 BuildRequires:	nss-devel >= 3.18.0
 BuildRequires:	parted-devel >= 3.1
 BuildRequires:	pkgconfig
