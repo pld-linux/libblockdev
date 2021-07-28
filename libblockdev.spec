@@ -5,16 +5,16 @@
 Summary:	A library for low-level manipulation with block devices
 Summary(pl.UTF-8):	Biblioteka do niskopoziomowych operacji na urządzeniach blokowych
 Name:		libblockdev
-Version:	2.25
-Release:	2
+Version:	2.26
+Release:	1
 License:	LGPL v2+
 Group:		Libraries
 Source0:	https://github.com/storaged-project/libblockdev/releases/download/%{version}-1/%{name}-%{version}.tar.gz
-# Source0-md5:	3873d4c97d82121ce86dab745b1862fc
+# Source0-md5:	d022c1ebb9b9a838c1a8c8b2b781b69d
 URL:		https://github.com/storaged-project/libblockdev
 BuildRequires:	autoconf >= 2.50
 BuildRequires:	automake
-BuildRequires:	cryptsetup-devel >= 1.6.7
+BuildRequires:	cryptsetup-devel >= 2.3.0
 BuildRequires:	device-mapper-devel >= 1.02.93
 BuildRequires:	dmraid-devel
 BuildRequires:	glib2-devel >= 1:2.42.2
@@ -119,7 +119,7 @@ Summary:	The crypto plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka crypto do biblioteki libblockdev
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	cryptsetup >= 1.6.7
+Requires:	cryptsetup >= 2.3.0
 Requires:	libblkid >= 2.23.0
 Requires:	nss >= 3.18.1
 
