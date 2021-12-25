@@ -6,7 +6,7 @@ Summary:	A library for low-level manipulation with block devices
 Summary(pl.UTF-8):	Biblioteka do niskopoziomowych operacji na urządzeniach blokowych
 Name:		libblockdev
 Version:	2.26
-Release:	1
+Release:	2
 License:	LGPL v2+
 Group:		Libraries
 Source0:	https://github.com/storaged-project/libblockdev/releases/download/%{version}-1/%{name}-%{version}.tar.gz
@@ -279,7 +279,7 @@ Summary(pl.UTF-8):	Wtyczka partycjonująca do biblioteki libblockdev
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	gdisk
-Requires:	multipath-tools
+Requires:	kpartx
 Requires:	parted-libs >= 3.1
 Requires:	util-linux
 
