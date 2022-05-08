@@ -1,6 +1,8 @@
 #
 # Conditional build:
 %bcond_without	apidocs		# gtk-doc based API documentation
+%bcond_without	python2		# CPython 2.x support
+%bcond_without	python3		# CPython 3.x support
 #
 Summary:	A library for low-level manipulation with block devices
 Summary(pl.UTF-8):	Biblioteka do niskopoziomowych operacji na urządzeniach blokowych
@@ -14,24 +16,24 @@ Source0:	https://github.com/storaged-project/libblockdev/releases/download/%{ver
 URL:		https://github.com/storaged-project/libblockdev
 BuildRequires:	autoconf >= 2.50
 BuildRequires:	automake
-BuildRequires:	cryptsetup-devel >= 2.3.0
+BuildRequires:	cryptsetup-devel >= 2.4.0
 BuildRequires:	device-mapper-devel >= 1.02.93
 BuildRequires:	dmraid-devel
 BuildRequires:	glib2-devel >= 1:2.42.2
 BuildRequires:	gobject-introspection-devel >= 1.3.0
 BuildRequires:	gtk-doc
 BuildRequires:	kmod-devel >= 19
-BuildRequires:	libblkid-devel >= 2.23.0
+BuildRequires:	libblkid-devel >= 2.27.0
 BuildRequires:	libbytesize-devel >= 0.1
 BuildRequires:	libmount-devel >= 2.23.0
 BuildRequires:	libtool >= 2:2
 BuildRequires:	libuuid-devel
-BuildRequires:	ndctl-devel >= 58.4
-BuildRequires:	nss-devel >= 3.18.0
+BuildRequires:	ndctl-devel >= 60
+BuildRequires:	nss-devel >= 3.18.1
 BuildRequires:	parted-devel >= 3.1
 BuildRequires:	pkgconfig
-BuildRequires:	python-devel >= 2
-BuildRequires:	python3-devel >= 1:3.2
+%{?with_python2:BuildRequires:	python-devel >= 1:2.5}
+%{?with_python3:BuildRequires:	python3-devel >= 1:3.2}
 BuildRequires:	udev-devel >= 1:216
 BuildRequires:	volume_key-devel
 BuildRequires:	yaml-devel >= 0.1
@@ -119,8 +121,8 @@ Summary:	The crypto plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka crypto do biblioteki libblockdev
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	cryptsetup >= 2.3.0
-Requires:	libblkid >= 2.23.0
+Requires:	cryptsetup >= 2.4.0
+Requires:	libblkid >= 2.27.0
 Requires:	nss >= 3.18.1
 
 %description crypto
@@ -152,7 +154,7 @@ Summary:	The FS plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka FS do biblioteki libblockdev
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	libblkid >= 2.23.0
+Requires:	libblkid >= 2.27.0
 Requires:	libmount >= 2.23.0
 Requires:	parted-libs >= 3.1
 
@@ -263,7 +265,7 @@ Summary:	The nvdimm plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka nvdimm do biblioteki libblockdev
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	ndctl-libs >= 58.4
+Requires:	ndctl-libs >= 60
 
 %description nvdimm
 The libblockdev library plugin providing the functionality related to
@@ -296,7 +298,7 @@ Summary:	The swap plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka swap do biblioteki libblockdev
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	libblkid >= 2.23.0
+Requires:	libblkid >= 2.27.0
 Requires:	util-linux >= 2.23.0
 
 %description swap
@@ -382,7 +384,10 @@ Ten pakiet zawiera wiązania Pythona 3 do libblockdev.
 %{__autoconf}
 %{__automake}
 %configure \
-	%{__with_without apidocs gtk-doc}
+	%{__with_without apidocs gtk-doc} \
+	%{!?with_python2:--without-python2} \
+	%{!?with_python3:--without-python3}
+
 %{__make}
 
 %install
@@ -572,11 +577,15 @@ rm -rf $RPM_BUILD_ROOT
 %files plugins
 %defattr(644,root,root,755)
 
+%if %{with python2}
 %files -n python-blockdev
 %defattr(644,root,root,755)
 %{py_sitedir}/gi/overrides/BlockDev.py[co]
+%endif
 
+%if %{with python3}
 %files -n python3-blockdev
 %defattr(644,root,root,755)
 %{py3_sitedir}/gi/overrides/BlockDev.py
 %{py3_sitedir}/gi/overrides/__pycache__/BlockDev.cpython-*.py[co]
+%endif
