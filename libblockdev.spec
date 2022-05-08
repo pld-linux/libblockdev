@@ -402,6 +402,9 @@ install -d $RPM_BUILD_ROOT%{_gtkdocdir}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
 %py_postclean
 
+%py3_comp $RPM_BUILD_ROOT%{py3_sitedir}
+%py3_ocomp $RPM_BUILD_ROOT%{py3_sitedir}
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -576,3 +579,4 @@ rm -rf $RPM_BUILD_ROOT
 %files -n python3-blockdev
 %defattr(644,root,root,755)
 %{py3_sitedir}/gi/overrides/BlockDev.py
+%{py3_sitedir}/gi/overrides/__pycache__/BlockDev.cpython-*.py[co]
