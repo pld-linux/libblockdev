@@ -34,6 +34,7 @@ BuildRequires:	parted-devel >= 3.1
 BuildRequires:	pkgconfig
 %{?with_python2:BuildRequires:	python-devel >= 1:2.5}
 %{?with_python3:BuildRequires:	python3-devel >= 1:3.2}
+BuildRequires:	rpm-build >= 4.6
 BuildRequires:	udev-devel >= 1:216
 BuildRequires:	volume_key-devel
 BuildRequires:	yaml-devel >= 0.1
@@ -93,6 +94,7 @@ Summary:	libblockdev API documentation
 Summary(pl.UTF-8):	Dokumentacja API biblioteki libblockdev
 Group:		Documentation
 Requires:	gtk-doc-common
+BuildArch:	noarch
 
 %description apidocs
 API documentation for libblockdev library.
