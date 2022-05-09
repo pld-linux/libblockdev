@@ -488,6 +488,35 @@ Development file for libblockdev part-err library.
 %description part-err-devel -l pl.UTF-8
 Plik programistyczny biblioteki libblockdev part-err.
 
+%package s390
+Summary:	The s390 plugin for the libblockdev library
+Summary(pl.UTF-8):	Wtyczka s390 do biblioteki libblockdev
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+# dasdfmt command (https://github.com/ibm-s390-linux/s390-tools)
+#Requires:	s390-tools
+
+%description s390
+The libblockdev library plugin providing the functionality related to
+s390 devices.
+
+%description s390 -l pl.UTF-8
+Wtyczka biblioteki libblockdev zapewniająca funkcjonalność
+związaną z urządzeniami s390.
+
+%package s390-devel
+Summary:	Header file for libblockdev s390 plugin
+Summary(pl.UTF-8):	Plik nagłówkowy wtyczki s390 do biblioteki libblockdev
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-s390 = %{version}-%{release}
+
+%description s390-devel
+Header file for libblockdev s390 plugin.
+
+%description s390-devel -l pl.UTF-8
+Plik nagłówkowy wtyczki s390 do biblioteki libblockdev.
+
 %package swap
 Summary:	The swap plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka swap do biblioteki libblockdev
@@ -565,6 +594,9 @@ Requires:	%{name}-mdraid = %{version}-%{release}
 Requires:	%{name}-mpath = %{version}-%{release}
 Requires:	%{name}-nvdimm = %{version}-%{release}
 Requires:	%{name}-part = %{version}-%{release}
+%ifarch s390 s390x
+Requires:	%{name}-s390 = %{version}-%{release}
+%endif
 Requires:	%{name}-swap = %{version}-%{release}
 Requires:	%{name}-vdo = %{version}-%{release}
 
@@ -679,6 +711,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %post	part-err -p /sbin/ldconfig
 %postun	part-err -p /sbin/ldconfig
+
+%post	s390 -p /sbin/ldconfig
+%postun	s390 -p /sbin/ldconfig
 
 %post	swap -p /sbin/ldconfig
 %postun	swap -p /sbin/ldconfig
@@ -852,6 +887,18 @@ rm -rf $RPM_BUILD_ROOT
 %files part-err-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_part_err.so
+
+%ifarch s390 s390x
+%files s390
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_s390.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libbd_s390.so.2
+
+%files s390-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_s390.so
+%{_includedir}/blockdev/s390.h
+%endif
 
 %files swap
 %defattr(644,root,root,755)
