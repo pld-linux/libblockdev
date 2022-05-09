@@ -69,18 +69,6 @@ Summary:	Header files for libblockdev library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki libblockdec
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	%{name}-btrfs = %{version}-%{release}
-Requires:	%{name}-crypto = %{version}-%{release}
-Requires:	%{name}-dm = %{version}-%{release}
-Requires:	%{name}-fs = %{version}-%{release}
-Requires:	%{name}-kbd = %{version}-%{release}
-Requires:	%{name}-loop = %{version}-%{release}
-Requires:	%{name}-lvm = %{version}-%{release}
-Requires:	%{name}-lvm-dbus = %{version}-%{release}
-Requires:	%{name}-mdraid = %{version}-%{release}
-Requires:	%{name}-mpath = %{version}-%{release}
-Requires:	%{name}-part = %{version}-%{release}
-Requires:	%{name}-swap = %{version}-%{release}
 Requires:	glib2-devel >= 1:2.42.2
 
 %description devel
@@ -107,7 +95,8 @@ Summary:	The BTRFS plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka BTRFS do biblioteki libblockdev
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	btrfs-progs
+# btrfs command
+Requires:	btrfs-progs >= 3.18.2
 Requires:	libbytesize >= 0.1
 
 %description btrfs
@@ -117,6 +106,19 @@ functionality.
 %description btrfs -l pl.UTF-8
 Wtyczka biblioteki libblockdev zapewniająca funkcjonalność
 związaną z BTRFS.
+
+%package btrfs-devel
+Summary:	Header file for libblockdev BTRFS plugin
+Summary(pl.UTF-8):	Plik nagłówkowy wtyczki BTRFS do biblioteki libblockdev
+Group:		Development/Libraries
+Requires:	%{name}-btrfs = %{version}-%{release}
+Requires:	%{name}-devel = %{version}-%{release}
+
+%description btrfs-devel
+Header file for libblockdev BTRFS plugin.
+
+%description btrfs-devel -l pl.UTF-8
+Plik nagłówkowy wtyczki BTRFS do biblioteki libblockdev.
 
 %package crypto
 Summary:	The crypto plugin for the libblockdev library
@@ -135,11 +137,25 @@ encrypted devices (LUKS).
 Wtyczka biblioteki libblockdev zapewniająca funkcjonalność
 związaną z urządzeniami szyfrowanymi (LUKS).
 
+%package crypto-devel
+Summary:	Header file for libblockdev crypto plugin
+Summary(pl.UTF-8):	Plik nagłówkowy wtyczki crypto do biblioteki libblockdev
+Group:		Development/Libraries
+Requires:	%{name}-crypto = %{version}-%{release}
+Requires:	%{name}-devel = %{version}-%{release}
+
+%description crypto-devel
+Header file for libblockdev crypto plugin.
+
+%description crypto-devel -l pl.UTF-8
+Plik nagłówkowy wtyczki crypto do biblioteki libblockdev.
+
 %package dm
 Summary:	The Device Mapper plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka Device Mapper do biblioteki libblockdev
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+# dmsetup command
 Requires:	device-mapper >= 1.02.93
 Requires:	dmraid
 
@@ -151,14 +167,37 @@ Device Mapper.
 Wtyczka biblioteki libblockdev zapewniająca funkcjonalność
 związaną z Device Mapperem.
 
+%package dm-devel
+Summary:	Header file for libblockdev Device Mapper plugin
+Summary(pl.UTF-8):	Plik nagłówkowy wtyczki Device Mapper do biblioteki libblockdev
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-dm = %{version}-%{release}
+Requires:	device-mapper-devel >= 1.02.93
+
+%description dm-devel
+Header file for libblockdev Device Mapper plugin.
+
+%description dm-devel -l pl.UTF-8
+Plik nagłówkowy wtyczki Device Mapper do biblioteki libblockdev.
+
 %package fs
 Summary:	The FS plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka FS do biblioteki libblockdev
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-part-err = %{version}-%{release}
 Requires:	libblkid >= 2.27.0
 Requires:	libmount >= 2.23.0
 Requires:	parted-libs >= 3.1
+# mkfs.vfat, fatlabel, fsck.vfat commands
+Suggests:	dosfstools
+# mke2fs, e2fsck, tune2fs, dumpe2fs, resize2fs commands
+Suggests:	e2fsprogs
+# mkntfs, ntfsfix, ntfsresize, ntfslabel, ntfscluster commands
+Suggests:	ntfsprogs
+# mkfs.xfs, xfs_db, xfs_repair, xfs_admin, xfs_growfs commands
+Suggests:	xfsprogs
 
 %description fs
 The libblockdev library plugin providing the functionality related to
@@ -168,11 +207,26 @@ operations with file systems.
 Wtyczka biblioteki libblockdev zapewniająca funkcjonalność
 związaną z operacjami na systemie plików.
 
+%package fs-devel
+Summary:	Header files for libblockdev FS plugin
+Summary(pl.UTF-8):	Pliki nagłówkowe wtyczki FS do biblioteki libblockdev
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-fs = %{version}-%{release}
+Requires:	%{name}-part-err-devel = %{version}-%{release}
+
+%description fs-devel
+Header files for libblockdev FS plugin.
+
+%description fs-devel -l pl.UTF-8
+Pliki nagłówkowe wtyczki FS do biblioteki libblockdev.
+
 %package kbd
 Summary:	The KBD plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka KBD do biblioteki libblockdev
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+# make-bcache command
 Requires:	bcache-tools >= 1.0.8
 Requires:	libbytesize >= 0.1
 
@@ -184,11 +238,25 @@ kernel block devices (namely zRAM and Bcache).
 Wtyczka biblioteki libblockdev zapewniająca funkcjonalność
 związaną z urządzeniami blokowymi jądra (konkretnie zRAM i Bcache).
 
+%package kbd-devel
+Summary:	Header file for libblockdev KBD plugin
+Summary(pl.UTF-8):	Plik nagłówkowy wtyczki KBD do biblioteki libblockdev
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-kbd = %{version}-%{release}
+
+%description kbd-devel
+Header file for libblockdev KBD plugin.
+
+%description kbd-devel -l pl.UTF-8
+Plik nagłówkowy wtyczki KBD do biblioteki libblockdev.
+
 %package loop
 Summary:	The loop plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka loop do biblioteki libblockdev
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+Requires:	losetup >= 2.23.2
 
 %description loop
 The libblockdev library plugin providing the functionality related to
@@ -198,13 +266,27 @@ loop devices.
 Wtyczka biblioteki libblockdev zapewniająca funkcjonalność
 związaną z urządzeniami loopback.
 
+%package loop-devel
+Summary:	Header file for libblockdev loop plugin
+Summary(pl.UTF-8):	Plik nagłówkowy wtyczki loop do biblioteki libblockdev
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-loop = %{version}-%{release}
+
+%description loop-devel
+Header file for libblockdev loop plugin.
+
+%description loop-devel -l pl.UTF-8
+Plik nagłówkowy wtyczki loop do biblioteki libblockdev.
+
 %package lvm
 Summary:	The LVM plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka LVM do biblioteki libblockdev
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	libbytesize >= 0.1
-Requires:	lvm2 >= 1.02.93
+Requires:	device-mapper-libs >= 1.02.93
+# lvm command
+Requires:	lvm2 >= 1.02.116
 Requires:	thin-provisioning-tools
 
 %description lvm
@@ -215,11 +297,26 @@ functionality.
 Wtyczka biblioteki libblockdev zapewniająca funkcjonalność
 związaną z LVM.
 
+%package lvm-devel
+Summary:	Header file for libblockdev LVM plugin
+Summary(pl.UTF-8):	Plik nagłówkowy wtyczki LVM do biblioteki libblockdev
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-lvm = %{version}-%{release}
+Requires:	device-mapper-devel >= 1.02.93
+
+%description lvm-devel
+Header file for libblockdev LVM plugin.
+
+%description lvm-devel -l pl.UTF-8
+Plik nagłówkowy wtyczki LVM do biblioteki libblockdev.
+
 %package lvm-dbus
 Summary:	The LVM-DBus plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka LVM-DBus do biblioteki libblockdev
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+Requires:	device-mapper-libs >= 1.02.93
 Requires:	lvm2-dbusd >= 2.02.156
 Requires:	thin-provisioning-tools
 
@@ -231,13 +328,26 @@ utilizing the LVM DBus API.
 Wtyczka biblioteki libblockdev zapewniająca funkcjonalność
 związaną z LVM, wykorzystująca API DBus LVM.
 
+%package lvm-dbus-devel
+Summary:	Development file for libblockdev LVM-DBus plugin
+Summary(pl.UTF-8):	Plik programistyczny wtyczki LVM-DBus do biblioteki libblockdev
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-lvm-dbus = %{version}-%{release}
+
+%description lvm-dbus-devel
+Development file for libblockdev LVM-DBus plugin.
+
+%description lvm-dbus-devel -l pl.UTF-8
+Plik programistyczny wtyczki LVM-DBus do biblioteki libblockdev.
+
 %package mdraid
 Summary:	The MD RAID plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka MD RAID do biblioteki libblockdev
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	libbytesize >= 0.1
-Requires:	mdadm
+Requires:	mdadm >= 3.3.2
 
 %description mdraid
 The libblockdev library plugin providing the functionality related to
@@ -247,12 +357,27 @@ MD RAID.
 Wtyczka biblioteki libblockdev zapewniająca funkcjonalność
 związaną z MD RAID.
 
+%package mdraid-devel
+Summary:	Header file for libblockdev MD RAID plugin
+Summary(pl.UTF-8):	Plik nagłówkowy wtyczki MD RAID do biblioteki libblockdev
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-mdraid = %{version}-%{release}
+
+%description mdraid-devel
+Header file for libblockdev MD RAID plugin.
+
+%description mdraid-devel -l pl.UTF-8
+Plik nagłówkowy wtyczki MD RAID do biblioteki libblockdev.
+
 %package mpath
 Summary:	The multipath plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka multipath do biblioteki libblockdev
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	multipath-tools
+Requires:	device-mapper-libs >= 1.02.93
+# multipath, mpathconf tools
+Requires:	multipath-tools >= 0.4.9
 
 %description mpath
 The libblockdev library plugin providing the functionality related to
@@ -262,12 +387,26 @@ multipath devices.
 Wtyczka biblioteki libblockdev zapewniająca funkcjonalność
 związaną z urządzeniami multipath.
 
+%package mpath-devel
+Summary:	Header file for libblockdev multipath plugin
+Summary(pl.UTF-8):	Plik nagłówkowy wtyczki multipath do biblioteki libblockdev
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-mpath = %{version}-%{release}
+
+%description mpath-devel
+Header file for libblockdev multipath plugin.
+
+%description mpath-devel -l pl.UTF-8
+Plik nagłówkowy wtyczki multipath do biblioteki libblockdev.
+
 %package nvdimm
 Summary:	The nvdimm plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka nvdimm do biblioteki libblockdev
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	ndctl-libs >= 60
+# ndctl command
+Requires:	ndctl >= 60
 
 %description nvdimm
 The libblockdev library plugin providing the functionality related to
@@ -277,14 +416,28 @@ nvdimm devices.
 Wtyczka biblioteki libblockdev zapewniająca funkcjonalność
 związaną z urządzeniami nvdimm.
 
+%package nvdimm-devel
+Summary:	Header file for libblockdev nvdimm plugin
+Summary(pl.UTF-8):	Plik nagłówkowy wtyczki nvdimm do biblioteki libblockdev
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-nvdimm = %{version}-%{release}
+
+%description nvdimm-devel
+Header file for libblockdev nvdimm plugin.
+
+%description nvdimm-devel -l pl.UTF-8
+Plik nagłówkowy wtyczki nvdimm do biblioteki libblockdev.
+
 %package part
 Summary:	The partitioning plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka partycjonująca do biblioteki libblockdev
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	gdisk
-Requires:	kpartx
+# sgdisk command
+Requires:	gdisk >= 0.8.6
 Requires:	parted-libs >= 3.1
+# sfdisk command
 Requires:	util-linux
 
 %description part
@@ -295,13 +448,54 @@ partitioning.
 Wtyczka biblioteki libblockdev zapewniająca funkcjonalność
 związaną z partycjonowaniem.
 
+%package part-devel
+Summary:	Header file for libblockdev part plugin
+Summary(pl.UTF-8):	Plik nagłówkowy wtyczki part do biblioteki libblockdev
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-part = %{version}-%{release}
+Requires:	%{name}-part-err-devel = %{version}-%{release}
+
+%description part-devel
+Header file for libblockdev part plugin.
+
+%description part-devel -l pl.UTF-8
+Plik nagłówkowy wtyczki part do biblioteki libblockdev.
+
+%package part-err
+Summary:	Parted exception handler library for libblockdev
+Summary(pl.UTF-8):	Biblioteka obsługi wyjątków Parteda do biblioteki libblockdev
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+Requires:	parted-libs >= 3.1
+
+%description part-err
+Parted exception handler library for libblockdev.
+
+%description part-err -l pl.UTF-8
+Biblioteka obsługi wyjątków Parteda do biblioteki libblockdev.
+
+%package part-err-devel
+Summary:	Development file for libblockdev part-err library
+Summary(pl.UTF-8):	Plik programistyczny biblioteki libblockdev part-err
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-part-err = %{version}-%{release}
+
+%description part-err-devel
+Development file for libblockdev part-err library.
+
+%description part-err-devel -l pl.UTF-8
+Plik programistyczny biblioteki libblockdev part-err.
+
 %package swap
 Summary:	The swap plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka swap do biblioteki libblockdev
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	libblkid >= 2.27.0
-Requires:	util-linux >= 2.23.0
+# mkswap, swaplabel commands
+Requires:	util-linux >= 2.23.2
 
 %description swap
 The libblockdev library plugin providing the functionality related to
@@ -311,12 +505,28 @@ swap devices.
 Wtyczka biblioteki libblockdev zapewniająca funkcjonalność
 związaną z urządzeniami wymiany.
 
+%package swap-devel
+Summary:	Header file for libblockdev swap plugin
+Summary(pl.UTF-8):	Plik nagłówkowy wtyczki swap do biblioteki libblockdev
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-swap = %{version}-%{release}
+
+%description swap-devel
+Header file for libblockdev swap plugin.
+
+%description swap-devel -l pl.UTF-8
+Plik nagłówkowy wtyczki swap do biblioteki libblockdev.
+
 %package vdo
 Summary:	The vdo plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka vdo do biblioteki libblockdev
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	libbytesize >= 0.1
+# vdo command
+Requires:	vdo
+Requires:	yaml >= 0.1
 
 %description vdo
 The libblockdev library plugin providing the functionality related to
@@ -325,6 +535,19 @@ vdo devices.
 %description vdo -l pl.UTF-8
 Wtyczka biblioteki libblockdev zapewniająca funkcjonalność
 związaną z urządzeniami vdo.
+
+%package vdo-devel
+Summary:	Header file for libblockdev vdo plugin
+Summary(pl.UTF-8):	Plik nagłówkowy wtyczki vdo do biblioteki libblockdev
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-vdo = %{version}-%{release}
+
+%description vdo-devel
+Header file for libblockdev vdo plugin.
+
+%description vdo-devel -l pl.UTF-8
+Plik nagłówkowy wtyczki vdo do biblioteki libblockdev.
 
 %package plugins
 Summary:	Meta-package that pulls all the libblockdev plugins as dependencies
@@ -365,8 +588,8 @@ This package contains Python 2 bindings for libblockdev.
 Ten pakiet zawiera wiązania Pythona 2 do libblockdev.
 
 %package -n python3-blockdev
-Summary:	Python 2 bindings for libblockdev
-Summary(pl.UTF-8):	Wiązania Pythona 2 do libblockdev
+Summary:	Python 3 bindings for libblockdev
+Summary(pl.UTF-8):	Wiązania Pythona 3 do libblockdev
 Group:		Libraries/Python
 Requires:	%{name} = %{version}-%{release}
 Requires:	python3-pygobject3 >= 3
@@ -454,6 +677,9 @@ rm -rf $RPM_BUILD_ROOT
 %post	part -p /sbin/ldconfig
 %postun	part -p /sbin/ldconfig
 
+%post	part-err -p /sbin/ldconfig
+%postun	part-err -p /sbin/ldconfig
+
 %post	swap -p /sbin/ldconfig
 %postun	swap -p /sbin/ldconfig
 
@@ -463,8 +689,6 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc features.rst specs.rst
-%attr(755,root,root) %{_libdir}/libbd_part_err.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libbd_part_err.so.2
 %attr(755,root,root) %{_libdir}/libbd_utils.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libbd_utils.so.2
 %attr(755,root,root) %{_libdir}/libblockdev.so.*.*.*
@@ -476,24 +700,18 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libbd_btrfs.so
-%attr(755,root,root) %{_libdir}/libbd_crypto.so
-%attr(755,root,root) %{_libdir}/libbd_dm.so
-%attr(755,root,root) %{_libdir}/libbd_fs.so
-%attr(755,root,root) %{_libdir}/libbd_kbd.so
-%attr(755,root,root) %{_libdir}/libbd_loop.so
-%attr(755,root,root) %{_libdir}/libbd_lvm.so
-%attr(755,root,root) %{_libdir}/libbd_lvm-dbus.so
-%attr(755,root,root) %{_libdir}/libbd_mdraid.so
-%attr(755,root,root) %{_libdir}/libbd_mpath.so
-%attr(755,root,root) %{_libdir}/libbd_nvdimm.so
-%attr(755,root,root) %{_libdir}/libbd_part.so
-%attr(755,root,root) %{_libdir}/libbd_part_err.so
-%attr(755,root,root) %{_libdir}/libbd_swap.so
 %attr(755,root,root) %{_libdir}/libbd_utils.so
-%attr(755,root,root) %{_libdir}/libbd_vdo.so
 %attr(755,root,root) %{_libdir}/libblockdev.so
-%{_includedir}/blockdev
+%dir %{_includedir}/blockdev
+%{_includedir}/blockdev/blockdev.h
+%{_includedir}/blockdev/dbus.h
+%{_includedir}/blockdev/dev_utils.h
+%{_includedir}/blockdev/exec.h
+%{_includedir}/blockdev/extra_arg.h
+%{_includedir}/blockdev/module.h
+%{_includedir}/blockdev/plugins.h
+%{_includedir}/blockdev/sizes.h
+%{_includedir}/blockdev/utils.h
 %{_datadir}/gir-1.0/BlockDev-2.0.gir
 %{_pkgconfigdir}/blockdev.pc
 %{_pkgconfigdir}/blockdev-utils.pc
@@ -509,30 +727,61 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libbd_btrfs.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libbd_btrfs.so.2
 
+%files btrfs-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_btrfs.so
+%{_includedir}/blockdev/btrfs.h
+
 %files crypto
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_crypto.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libbd_crypto.so.2
+
+%files crypto-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_crypto.so
+%{_includedir}/blockdev/crypto.h
 
 %files dm
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_dm.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libbd_dm.so.2
 
+%files dm-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_dm.so
+%{_includedir}/blockdev/dm.h
+
 %files fs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_fs.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libbd_fs.so.2
+
+%files fs-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_fs.so
+%{_includedir}/blockdev/fs.h
+%{_includedir}/blockdev/fs
 
 %files kbd
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_kbd.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libbd_kbd.so.2
 
+%files kbd-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_kbd.so
+%{_includedir}/blockdev/kbd.h
+
 %files loop
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_loop.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libbd_loop.so.2
+
+%files loop-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_loop.so
+%{_includedir}/blockdev/loop.h
 
 %files lvm
 %defattr(644,root,root,755)
@@ -540,41 +789,89 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libbd_lvm.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libbd_lvm.so.2
 
+%files lvm-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_lvm.so
+%{_includedir}/blockdev/lvm.h
+
 %files lvm-dbus
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_lvm-dbus.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libbd_lvm-dbus.so.2
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/libblockdev/conf.d/10-lvm-dbus.cfg
 
+%files lvm-dbus-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_lvm-dbus.so
+
 %files mdraid
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_mdraid.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libbd_mdraid.so.2
+
+%files mdraid-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_mdraid.so
+%{_includedir}/blockdev/mdraid.h
 
 %files mpath
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_mpath.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libbd_mpath.so.2
 
+%files mpath-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_mpath.so
+%{_includedir}/blockdev/mpath.h
+
 %files nvdimm
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_nvdimm.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libbd_nvdimm.so.2
+
+%files nvdimm-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_nvdimm.so
+%{_includedir}/blockdev/nvdimm.h
 
 %files part
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_part.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libbd_part.so.2
 
+%files part-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_part.so
+%{_includedir}/blockdev/part.h
+
+%files part-err
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_part_err.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libbd_part_err.so.2
+
+%files part-err-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_part_err.so
+
 %files swap
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_swap.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libbd_swap.so.2
 
+%files swap-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_swap.so
+%{_includedir}/blockdev/swap.h
+
 %files vdo
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_vdo.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libbd_vdo.so.2
+
+%files vdo-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_vdo.so
+%{_includedir}/blockdev/vdo.h
 
 %files plugins
 %defattr(644,root,root,755)
