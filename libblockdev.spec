@@ -1,38 +1,39 @@
 #
 # Conditional build:
 %bcond_without	apidocs		# gtk-doc based API documentation
-%bcond_without	python2		# CPython 2.x support
 %bcond_without	python3		# CPython 3.x support
 #
 Summary:	A library for low-level manipulation with block devices
 Summary(pl.UTF-8):	Biblioteka do niskopoziomowych operacji na urządzeniach blokowych
 Name:		libblockdev
-Version:	2.28
+Version:	3.0
 Release:	1
 License:	LGPL v2+
 Group:		Libraries
 Source0:	https://github.com/storaged-project/libblockdev/releases/download/%{version}-1/%{name}-%{version}.tar.gz
-# Source0-md5:	6476e5967753ee03d8e65f4d7837a4b6
+# Source0-md5:	ef5dd9a42ac7d31d88842222773ded70
 URL:		https://github.com/storaged-project/libblockdev
 BuildRequires:	autoconf >= 2.50
 BuildRequires:	automake
-BuildRequires:	cryptsetup-devel >= 2.4.0
+BuildRequires:	cryptsetup-devel >= 2.6.0
 BuildRequires:	device-mapper-devel >= 1.02.93
-BuildRequires:	dmraid-devel
+BuildRequires:	e2fsprogs-devel
 BuildRequires:	glib2-devel >= 1:2.42.2
 BuildRequires:	gobject-introspection-devel >= 1.3.0
 BuildRequires:	gtk-doc
 BuildRequires:	kmod-devel >= 19
+BuildRequires:	keyutils-devel
 BuildRequires:	libblkid-devel >= 2.27.0
 BuildRequires:	libbytesize-devel >= 0.1
+BuildRequires:	libfdisk-devel >= 2.31.0
 BuildRequires:	libmount-devel >= 2.23.0
+BuildRequires:	libnvme-devel >= 1.4
 BuildRequires:	libtool >= 2:2
 BuildRequires:	libuuid-devel
 BuildRequires:	ndctl-devel >= 60
 BuildRequires:	nss-devel >= 3.18.1
 BuildRequires:	parted-devel >= 3.1
 BuildRequires:	pkgconfig
-%{?with_python2:BuildRequires:	python-devel >= 1:2.5}
 %{?with_python3:BuildRequires:	python3-devel >= 1:3.2}
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	udev-devel >= 1:216
@@ -41,6 +42,9 @@ BuildRequires:	yaml-devel >= 0.1
 Requires:	glib2 >= 1:2.42.2
 Requires:	kmod-libs >= 19
 Requires:	udev-libs >= 1:216
+Obsoletes:	libblockdev-kbd < 3.0
+Obsoletes:	libblockdev-part-err < 3.0
+Obsoletes:	libblockdev-vdo < 3.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -70,6 +74,9 @@ Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki libblockdec
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	glib2-devel >= 1:2.42.2
+Obsoletes:	libblockdev-kbd-devel < 3.0
+Obsoletes:	libblockdev-part-err-devel < 3.0
+Obsoletes:	libblockdev-vdo-devel < 3.0
 
 %description devel
 Header files for libblockdev library.
@@ -125,7 +132,7 @@ Summary:	The crypto plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka crypto do biblioteki libblockdev
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	cryptsetup >= 2.4.0
+Requires:	cryptsetup >= 2.6.0
 Requires:	libblkid >= 2.27.0
 Requires:	nss >= 3.18.1
 
@@ -157,7 +164,6 @@ Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 # dmsetup command
 Requires:	device-mapper >= 1.02.93
-Requires:	dmraid
 
 %description dm
 The libblockdev library plugin providing the functionality related to
@@ -186,10 +192,8 @@ Summary:	The FS plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka FS do biblioteki libblockdev
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	%{name}-part-err = %{version}-%{release}
 Requires:	libblkid >= 2.27.0
 Requires:	libmount >= 2.23.0
-Requires:	parted-libs >= 3.1
 # mkfs.vfat, fatlabel, fsck.vfat commands
 Suggests:	dosfstools
 # mke2fs, e2fsck, tune2fs, dumpe2fs, resize2fs commands
@@ -213,43 +217,12 @@ Summary(pl.UTF-8):	Pliki nagłówkowe wtyczki FS do biblioteki libblockdev
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 Requires:	%{name}-fs = %{version}-%{release}
-Requires:	%{name}-part-err-devel = %{version}-%{release}
 
 %description fs-devel
 Header files for libblockdev FS plugin.
 
 %description fs-devel -l pl.UTF-8
 Pliki nagłówkowe wtyczki FS do biblioteki libblockdev.
-
-%package kbd
-Summary:	The KBD plugin for the libblockdev library
-Summary(pl.UTF-8):	Wtyczka KBD do biblioteki libblockdev
-Group:		Libraries
-Requires:	%{name} = %{version}-%{release}
-# make-bcache command
-Requires:	bcache-tools >= 1.0.8
-Requires:	libbytesize >= 0.1
-
-%description kbd
-The libblockdev library plugin providing the functionality related to
-kernel block devices (namely zRAM and Bcache).
-
-%description kbd -l pl.UTF-8
-Wtyczka biblioteki libblockdev zapewniająca funkcjonalność
-związaną z urządzeniami blokowymi jądra (konkretnie zRAM i Bcache).
-
-%package kbd-devel
-Summary:	Header file for libblockdev KBD plugin
-Summary(pl.UTF-8):	Plik nagłówkowy wtyczki KBD do biblioteki libblockdev
-Group:		Development/Libraries
-Requires:	%{name}-devel = %{version}-%{release}
-Requires:	%{name}-kbd = %{version}-%{release}
-
-%description kbd-devel
-Header file for libblockdev KBD plugin.
-
-%description kbd-devel -l pl.UTF-8
-Plik nagłówkowy wtyczki KBD do biblioteki libblockdev.
 
 %package loop
 Summary:	The loop plugin for the libblockdev library
@@ -429,6 +402,34 @@ Header file for libblockdev nvdimm plugin.
 %description nvdimm-devel -l pl.UTF-8
 Plik nagłówkowy wtyczki nvdimm do biblioteki libblockdev.
 
+%package nvme
+Summary:	The NVMe plugin for the libblockdev library
+Summary(pl.UTF-8):	Wtyczka NVMe do biblioteki libblockdev
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+Requires:	libnvme >= 1.4
+
+%description nvme
+The libblockdev library plugin providing the functionality related to
+NVMe devices.
+
+%description nvme -l pl.UTF-8
+Wtyczka biblioteki libblockdev zapewniająca funkcjonalność
+związaną z urządzeniami NVMe.
+
+%package nvme-devel
+Summary:	Header file for libblockdev NVMe plugin
+Summary(pl.UTF-8):	Plik nagłówkowy wtyczki NVMe do biblioteki libblockdev
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-nvme = %{version}-%{release}
+
+%description nvme-devel
+Header file for libblockdev NVMe plugin.
+
+%description nvme-devel -l pl.UTF-8
+Plik nagłówkowy wtyczki NVMe do biblioteki libblockdev.
+
 %package part
 Summary:	The partitioning plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka partycjonująca do biblioteki libblockdev
@@ -436,7 +437,7 @@ Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 # sgdisk command
 Requires:	gdisk >= 0.8.6
-Requires:	parted-libs >= 3.1
+Requires:	libfdisk >= 2.31.0
 # sfdisk command
 Requires:	util-linux
 
@@ -454,39 +455,12 @@ Summary(pl.UTF-8):	Plik nagłówkowy wtyczki part do biblioteki libblockdev
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 Requires:	%{name}-part = %{version}-%{release}
-Requires:	%{name}-part-err-devel = %{version}-%{release}
 
 %description part-devel
 Header file for libblockdev part plugin.
 
 %description part-devel -l pl.UTF-8
 Plik nagłówkowy wtyczki part do biblioteki libblockdev.
-
-%package part-err
-Summary:	Parted exception handler library for libblockdev
-Summary(pl.UTF-8):	Biblioteka obsługi wyjątków Parteda do biblioteki libblockdev
-Group:		Libraries
-Requires:	%{name} = %{version}-%{release}
-Requires:	parted-libs >= 3.1
-
-%description part-err
-Parted exception handler library for libblockdev.
-
-%description part-err -l pl.UTF-8
-Biblioteka obsługi wyjątków Parteda do biblioteki libblockdev.
-
-%package part-err-devel
-Summary:	Development file for libblockdev part-err library
-Summary(pl.UTF-8):	Plik programistyczny biblioteki libblockdev part-err
-Group:		Development/Libraries
-Requires:	%{name}-devel = %{version}-%{release}
-Requires:	%{name}-part-err = %{version}-%{release}
-
-%description part-err-devel
-Development file for libblockdev part-err library.
-
-%description part-err-devel -l pl.UTF-8
-Plik programistyczny biblioteki libblockdev part-err.
 
 %package s390
 Summary:	The s390 plugin for the libblockdev library
@@ -547,37 +521,6 @@ Header file for libblockdev swap plugin.
 %description swap-devel -l pl.UTF-8
 Plik nagłówkowy wtyczki swap do biblioteki libblockdev.
 
-%package vdo
-Summary:	The vdo plugin for the libblockdev library
-Summary(pl.UTF-8):	Wtyczka vdo do biblioteki libblockdev
-Group:		Libraries
-Requires:	%{name} = %{version}-%{release}
-Requires:	libbytesize >= 0.1
-# vdo command
-Requires:	vdo
-Requires:	yaml >= 0.1
-
-%description vdo
-The libblockdev library plugin providing the functionality related to
-vdo devices.
-
-%description vdo -l pl.UTF-8
-Wtyczka biblioteki libblockdev zapewniająca funkcjonalność
-związaną z urządzeniami vdo.
-
-%package vdo-devel
-Summary:	Header file for libblockdev vdo plugin
-Summary(pl.UTF-8):	Plik nagłówkowy wtyczki vdo do biblioteki libblockdev
-Group:		Development/Libraries
-Requires:	%{name}-devel = %{version}-%{release}
-Requires:	%{name}-vdo = %{version}-%{release}
-
-%description vdo-devel
-Header file for libblockdev vdo plugin.
-
-%description vdo-devel -l pl.UTF-8
-Plik nagłówkowy wtyczki vdo do biblioteki libblockdev.
-
 %package plugins
 Summary:	Meta-package that pulls all the libblockdev plugins as dependencies
 Summary(pl.UTF-8):	Metapakiet instalujący przez zależności wszystkie wtyczki libblockdev
@@ -586,25 +529,37 @@ Requires:	%{name}-btrfs = %{version}-%{release}
 Requires:	%{name}-crypto = %{version}-%{release}
 Requires:	%{name}-dm = %{version}-%{release}
 Requires:	%{name}-fs = %{version}-%{release}
-Requires:	%{name}-kbd = %{version}-%{release}
 Requires:	%{name}-loop = %{version}-%{release}
 Requires:	%{name}-lvm = %{version}-%{release}
 Requires:	%{name}-lvm-dbus = %{version}-%{release}
 Requires:	%{name}-mdraid = %{version}-%{release}
 Requires:	%{name}-mpath = %{version}-%{release}
 Requires:	%{name}-nvdimm = %{version}-%{release}
+Requires:	%{name}-nvme = %{version}-%{release}
 Requires:	%{name}-part = %{version}-%{release}
 %ifarch s390 s390x
 Requires:	%{name}-s390 = %{version}-%{release}
 %endif
 Requires:	%{name}-swap = %{version}-%{release}
-Requires:	%{name}-vdo = %{version}-%{release}
 
 %description plugins
 A meta-package that pulls all the libblockdev plugins as dependencies.
 
 %description plugins -l pl.UTF-8
 Metapakiet instalujący przez zależności wszystkie wtyczki libblockdev.
+
+%package tools
+Summary:	Various tools based on libblockdev
+Summary(pl.UTF-8):	Różne narzędzia bazujące na libblockdev
+Group:		Applications/System
+Requires:	%{name} = %{version}-%{release}
+Requires:	parted-libs >= 3.1
+
+%description tools
+Various tools based on libblockdev.
+
+%description tools -l pl.UTF-8
+Różne narzędzia bazujące na libblockdev.
 
 %package -n python-blockdev
 Summary:	Python 2 bindings for libblockdev
@@ -625,6 +580,7 @@ Summary(pl.UTF-8):	Wiązania Pythona 3 do libblockdev
 Group:		Libraries/Python
 Requires:	%{name} = %{version}-%{release}
 Requires:	python3-pygobject3 >= 3
+Obsoletes:	python-blockdev < 3.0
 
 %description -n python3-blockdev
 This package contains Python 3 bindings for libblockdev.
@@ -642,7 +598,6 @@ Ten pakiet zawiera wiązania Pythona 3 do libblockdev.
 %{__automake}
 %configure \
 	%{__with_without apidocs gtk-doc} \
-	%{!?with_python2:--without-python2} \
 	%{!?with_python3:--without-python3}
 
 %{__make}
@@ -660,12 +615,10 @@ install -d $RPM_BUILD_ROOT%{_gtkdocdir}
 
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/*.la
 
-%py_comp $RPM_BUILD_ROOT%{py_sitedir}
-%py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
-%py_postclean
-
+%if %{with python3}
 %py3_comp $RPM_BUILD_ROOT%{py3_sitedir}
 %py3_ocomp $RPM_BUILD_ROOT%{py3_sitedir}
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -685,9 +638,6 @@ rm -rf $RPM_BUILD_ROOT
 %post	fs -p /sbin/ldconfig
 %postun	fs -p /sbin/ldconfig
 
-%post	kbd -p /sbin/ldconfig
-%postun	kbd -p /sbin/ldconfig
-
 %post	loop -p /sbin/ldconfig
 %postun	loop -p /sbin/ldconfig
 
@@ -706,11 +656,11 @@ rm -rf $RPM_BUILD_ROOT
 %post	nvdimm -p /sbin/ldconfig
 %postun	nvdimm -p /sbin/ldconfig
 
+%post	nvme -p /sbin/ldconfig
+%postun	nvme -p /sbin/ldconfig
+
 %post	part -p /sbin/ldconfig
 %postun	part -p /sbin/ldconfig
-
-%post	part-err -p /sbin/ldconfig
-%postun	part-err -p /sbin/ldconfig
 
 %post	s390 -p /sbin/ldconfig
 %postun	s390 -p /sbin/ldconfig
@@ -718,20 +668,16 @@ rm -rf $RPM_BUILD_ROOT
 %post	swap -p /sbin/ldconfig
 %postun	swap -p /sbin/ldconfig
 
-%post	vdo -p /sbin/ldconfig
-%postun	vdo -p /sbin/ldconfig
-
 %files
 %defattr(644,root,root,755)
-%doc features.rst specs.rst
 %attr(755,root,root) %{_libdir}/libbd_utils.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libbd_utils.so.2
+%attr(755,root,root) %ghost %{_libdir}/libbd_utils.so.3
 %attr(755,root,root) %{_libdir}/libblockdev.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libblockdev.so.2
+%attr(755,root,root) %ghost %{_libdir}/libblockdev.so.3
 %dir %{_sysconfdir}/libblockdev
 %dir %{_sysconfdir}/libblockdev/conf.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/libblockdev/conf.d/00-default.cfg
-%{_libdir}/girepository-1.0/BlockDev-2.0.typelib
+%{_libdir}/girepository-1.0/BlockDev-3.0.typelib
 
 %files devel
 %defattr(644,root,root,755)
@@ -743,11 +689,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/blockdev/dev_utils.h
 %{_includedir}/blockdev/exec.h
 %{_includedir}/blockdev/extra_arg.h
+%{_includedir}/blockdev/logging.h
 %{_includedir}/blockdev/module.h
 %{_includedir}/blockdev/plugins.h
 %{_includedir}/blockdev/sizes.h
 %{_includedir}/blockdev/utils.h
-%{_datadir}/gir-1.0/BlockDev-2.0.gir
+%{_datadir}/gir-1.0/BlockDev-3.0.gir
 %{_pkgconfigdir}/blockdev.pc
 %{_pkgconfigdir}/blockdev-utils.pc
 
@@ -760,7 +707,7 @@ rm -rf $RPM_BUILD_ROOT
 %files btrfs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_btrfs.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libbd_btrfs.so.2
+%attr(755,root,root) %ghost %{_libdir}/libbd_btrfs.so.3
 
 %files btrfs-devel
 %defattr(644,root,root,755)
@@ -770,7 +717,7 @@ rm -rf $RPM_BUILD_ROOT
 %files crypto
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_crypto.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libbd_crypto.so.2
+%attr(755,root,root) %ghost %{_libdir}/libbd_crypto.so.3
 
 %files crypto-devel
 %defattr(644,root,root,755)
@@ -780,7 +727,7 @@ rm -rf $RPM_BUILD_ROOT
 %files dm
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_dm.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libbd_dm.so.2
+%attr(755,root,root) %ghost %{_libdir}/libbd_dm.so.3
 
 %files dm-devel
 %defattr(644,root,root,755)
@@ -790,7 +737,7 @@ rm -rf $RPM_BUILD_ROOT
 %files fs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_fs.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libbd_fs.so.2
+%attr(755,root,root) %ghost %{_libdir}/libbd_fs.so.3
 
 %files fs-devel
 %defattr(644,root,root,755)
@@ -798,20 +745,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/blockdev/fs.h
 %{_includedir}/blockdev/fs
 
-%files kbd
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libbd_kbd.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libbd_kbd.so.2
-
-%files kbd-devel
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libbd_kbd.so
-%{_includedir}/blockdev/kbd.h
-
 %files loop
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_loop.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libbd_loop.so.2
+%attr(755,root,root) %ghost %{_libdir}/libbd_loop.so.3
 
 %files loop-devel
 %defattr(644,root,root,755)
@@ -820,9 +757,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files lvm
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/lvm-cache-stats
 %attr(755,root,root) %{_libdir}/libbd_lvm.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libbd_lvm.so.2
+%attr(755,root,root) %ghost %{_libdir}/libbd_lvm.so.3
 
 %files lvm-devel
 %defattr(644,root,root,755)
@@ -832,7 +768,7 @@ rm -rf $RPM_BUILD_ROOT
 %files lvm-dbus
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_lvm-dbus.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libbd_lvm-dbus.so.2
+%attr(755,root,root) %ghost %{_libdir}/libbd_lvm-dbus.so.3
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/libblockdev/conf.d/10-lvm-dbus.cfg
 
 %files lvm-dbus-devel
@@ -842,7 +778,7 @@ rm -rf $RPM_BUILD_ROOT
 %files mdraid
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_mdraid.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libbd_mdraid.so.2
+%attr(755,root,root) %ghost %{_libdir}/libbd_mdraid.so.3
 
 %files mdraid-devel
 %defattr(644,root,root,755)
@@ -852,7 +788,7 @@ rm -rf $RPM_BUILD_ROOT
 %files mpath
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_mpath.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libbd_mpath.so.2
+%attr(755,root,root) %ghost %{_libdir}/libbd_mpath.so.3
 
 %files mpath-devel
 %defattr(644,root,root,755)
@@ -862,37 +798,38 @@ rm -rf $RPM_BUILD_ROOT
 %files nvdimm
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_nvdimm.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libbd_nvdimm.so.2
+%attr(755,root,root) %ghost %{_libdir}/libbd_nvdimm.so.3
 
 %files nvdimm-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_nvdimm.so
 %{_includedir}/blockdev/nvdimm.h
 
+%files nvme
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_nvme.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libbd_nvme.so.3
+
+%files nvme-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_nvme.so
+%{_includedir}/blockdev/nvme.h
+
 %files part
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_part.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libbd_part.so.2
+%attr(755,root,root) %ghost %{_libdir}/libbd_part.so.3
 
 %files part-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_part.so
 %{_includedir}/blockdev/part.h
 
-%files part-err
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libbd_part_err.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libbd_part_err.so.2
-
-%files part-err-devel
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libbd_part_err.so
-
 %ifarch s390 s390x
 %files s390
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_s390.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libbd_s390.so.2
+%attr(755,root,root) %ghost %{_libdir}/libbd_s390.so.3
 
 %files s390-devel
 %defattr(644,root,root,755)
@@ -903,31 +840,20 @@ rm -rf $RPM_BUILD_ROOT
 %files swap
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_swap.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libbd_swap.so.2
+%attr(755,root,root) %ghost %{_libdir}/libbd_swap.so.3
 
 %files swap-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_swap.so
 %{_includedir}/blockdev/swap.h
 
-%files vdo
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libbd_vdo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libbd_vdo.so.2
-
-%files vdo-devel
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libbd_vdo.so
-%{_includedir}/blockdev/vdo.h
-
 %files plugins
 %defattr(644,root,root,755)
 
-%if %{with python2}
-%files -n python-blockdev
+%files tools
 %defattr(644,root,root,755)
-%{py_sitedir}/gi/overrides/BlockDev.py[co]
-%endif
+%attr(755,root,root) %{_bindir}/lvm-cache-stats
+%attr(755,root,root) %{_bindir}/vfat-resize
 
 %if %{with python3}
 %files -n python3-blockdev
