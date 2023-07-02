@@ -34,7 +34,10 @@ BuildRequires:	ndctl-devel >= 60
 BuildRequires:	nss-devel >= 3.18.1
 BuildRequires:	parted-devel >= 3.1
 BuildRequires:	pkgconfig
-%{?with_python3:BuildRequires:	python3-devel >= 1:3.2}
+%if %{with python3}
+BuildRequires:	python3-devel >= 1:3.2
+BuildRequires:	python3-modules >= 1:3.2
+%endif
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	udev-devel >= 1:216
 BuildRequires:	volume_key-devel
