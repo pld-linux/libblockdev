@@ -6,12 +6,12 @@
 Summary:	A library for low-level manipulation with block devices
 Summary(pl.UTF-8):	Biblioteka do niskopoziomowych operacji na urządzeniach blokowych
 Name:		libblockdev
-Version:	3.0
+Version:	3.0.1
 Release:	1
 License:	LGPL v2+
 Group:		Libraries
 Source0:	https://github.com/storaged-project/libblockdev/releases/download/%{version}-1/%{name}-%{version}.tar.gz
-# Source0-md5:	ef5dd9a42ac7d31d88842222773ded70
+# Source0-md5:	5907ac23f6ed0d235c24a520f4226fc7
 URL:		https://github.com/storaged-project/libblockdev
 BuildRequires:	autoconf >= 2.50
 BuildRequires:	automake
@@ -678,8 +678,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libblockdev.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libblockdev.so.3
 %dir %{_sysconfdir}/libblockdev
-%dir %{_sysconfdir}/libblockdev/conf.d
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/libblockdev/conf.d/00-default.cfg
+%dir %{_sysconfdir}/libblockdev/3
+%dir %{_sysconfdir}/libblockdev/3/conf.d
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/libblockdev/3/conf.d/00-default.cfg
 %{_libdir}/girepository-1.0/BlockDev-3.0.typelib
 
 %files devel
@@ -772,7 +773,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libbd_lvm-dbus.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libbd_lvm-dbus.so.3
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/libblockdev/conf.d/10-lvm-dbus.cfg
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/libblockdev/3/conf.d/10-lvm-dbus.cfg
 
 %files lvm-dbus-devel
 %defattr(644,root,root,755)
