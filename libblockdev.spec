@@ -564,19 +564,6 @@ Various tools based on libblockdev.
 %description tools -l pl.UTF-8
 Różne narzędzia bazujące na libblockdev.
 
-%package -n python-blockdev
-Summary:	Python 2 bindings for libblockdev
-Summary(pl.UTF-8):	Wiązania Pythona 2 do libblockdev
-Group:		Libraries/Python
-Requires:	%{name} = %{version}-%{release}
-Requires:	python-pygobject3 >= 3
-
-%description -n python-blockdev
-This package contains Python 2 bindings for libblockdev.
-
-%description -n python-blockdev -l pl.UTF-8
-Ten pakiet zawiera wiązania Pythona 2 do libblockdev.
-
 %package -n python3-blockdev
 Summary:	Python 3 bindings for libblockdev
 Summary(pl.UTF-8):	Wiązania Pythona 3 do libblockdev
