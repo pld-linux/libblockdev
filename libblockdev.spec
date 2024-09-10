@@ -6,23 +6,25 @@
 Summary:	A library for low-level manipulation with block devices
 Summary(pl.UTF-8):	Biblioteka do niskopoziomowych operacji na urządzeniach blokowych
 Name:		libblockdev
-Version:	3.1.1
+Version:	3.2.0
 Release:	1
 License:	LGPL v2+
 Group:		Libraries
-Source0:	https://github.com/storaged-project/libblockdev/releases/download/%{version}-1/%{name}-%{version}.tar.gz
-# Source0-md5:	28d43f2d6bff85245502a8c4c478c5a3
+Source0:	https://github.com/storaged-project/libblockdev/releases/download/%{version}/%{name}-%{version}.tar.gz
+# Source0-md5:	60a52413f14303147c79a6f368aced92
 URL:		https://github.com/storaged-project/libblockdev
 BuildRequires:	autoconf >= 2.50
 BuildRequires:	automake
-BuildRequires:	cryptsetup-devel >= 2.6.0
+BuildRequires:	cryptsetup-devel >= 2.7.0
 BuildRequires:	device-mapper-devel >= 1.02.93
 BuildRequires:	e2fsprogs-devel
 BuildRequires:	glib2-devel >= 1:2.42.2
 BuildRequires:	gobject-introspection-devel >= 1.3.0
 BuildRequires:	gtk-doc
+BuildRequires:	json-glib-devel >= 1.0
 BuildRequires:	kmod-devel >= 19
 BuildRequires:	keyutils-devel
+BuildRequires:	libatasmart-devel >= 0.17
 BuildRequires:	libblkid-devel >= 2.27.0
 BuildRequires:	libbytesize-devel >= 0.1
 BuildRequires:	libfdisk-devel >= 2.31.0
@@ -39,6 +41,7 @@ BuildRequires:	python3-devel >= 1:3.2
 BuildRequires:	python3-modules >= 1:3.2
 %endif
 BuildRequires:	rpm-build >= 4.6
+BuildRequires:	smartmontools
 BuildRequires:	udev-devel >= 1:216
 BuildRequires:	volume_key-devel
 BuildRequires:	yaml-devel >= 0.1
@@ -135,7 +138,7 @@ Summary:	The crypto plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka crypto do biblioteki libblockdev
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	cryptsetup >= 2.6.0
+Requires:	cryptsetup-libs >= 2.7.0
 Requires:	libblkid >= 2.27.0
 Requires:	nss >= 3.18.1
 
@@ -494,6 +497,64 @@ Header file for libblockdev s390 plugin.
 %description s390-devel -l pl.UTF-8
 Plik nagłówkowy wtyczki s390 do biblioteki libblockdev.
 
+%package smart
+Summary:	The smart plugin for the libblockdev library
+Summary(pl.UTF-8):	Wtyczka smart do biblioteki libblockdev
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+Requires:	libatasmart >= 0.17
+Suggests:	smartmontools
+
+%description smart
+The libblockdev library plugin providing the functionality related to
+ATA S.M.A.R.T. support through libatasmart.
+
+%description smart -l pl.UTF-8
+Wtyczka biblioteki libblockdev zapewniająca funkcjonalność
+związaną ze wsparciem dla ATA S.M.A.R.T używająca libatasmart.
+
+%package smart-devel
+Summary:	Header file for libblockdev smart plugin
+Summary(pl.UTF-8):	Plik nagłówkowy wtyczki smart do biblioteki libblockdev
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-smart = %{version}-%{release}
+
+%description smart-devel
+Header file for libblockdev smart plugin.
+
+%description smart-devel -l pl.UTF-8
+Plik nagłówkowy wtyczki smart do biblioteki libblockdev.
+
+%package smartmontools
+Summary:	The smartmontools plugin for the libblockdev library
+Summary(pl.UTF-8):	Wtyczka smartmontools do biblioteki libblockdev
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+Requires:	smartmontools
+
+%description smartmontools
+The libblockdev library plugin providing the functionality related to
+ATA S.M.A.R.T. support through smartmontools.
+
+%description smartmontools -l pl.UTF-8
+Wtyczka biblioteki libblockdev zapewniająca funkcjonalność
+związaną ze wsparciem dla ATA S.M.A.R.T używająca smartmontools.
+
+%package smartmontools-devel
+Summary:	Header file for libblockdev smartmontools plugin
+Summary(pl.UTF-8):	Plik nagłówkowy wtyczki smartmontools do biblioteki libblockdev
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-smart-devel = %{version}-%{release}
+Requires:	%{name}-smartmontools = %{version}-%{release}
+
+%description smartmontools-devel
+Header file for libblockdev smartmontools plugin.
+
+%description smartmontools-devel -l pl.UTF-8
+Plik nagłówkowy wtyczki smartmontools do biblioteki libblockdev.
+
 %package swap
 Summary:	The swap plugin for the libblockdev library
 Summary(pl.UTF-8):	Wtyczka swap do biblioteki libblockdev
@@ -543,6 +604,8 @@ Requires:	%{name}-part = %{version}-%{release}
 %ifarch s390 s390x
 Requires:	%{name}-s390 = %{version}-%{release}
 %endif
+Requires:	%{name}-smart = %{version}-%{release}
+Requires:	%{name}-smartmontools = %{version}-%{release}
 Requires:	%{name}-swap = %{version}-%{release}
 
 %description plugins
@@ -588,7 +651,8 @@ Ten pakiet zawiera wiązania Pythona 3 do libblockdev.
 %{__automake}
 %configure \
 	%{__with_without apidocs gtk-doc} \
-	%{!?with_python3:--without-python3}
+	%{!?with_python3:--without-python3} \
+	--with-drivedb=/var/lib/smartmontools/drivedb
 
 %{__make}
 
@@ -654,6 +718,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %post	s390 -p /sbin/ldconfig
 %postun	s390 -p /sbin/ldconfig
+
+%post	smart -p /sbin/ldconfig
+%postun	smart -p /sbin/ldconfig
+
+%post	smartmontools -p /sbin/ldconfig
+%postun	smartmontools -p /sbin/ldconfig
 
 %post	swap -p /sbin/ldconfig
 %postun	swap -p /sbin/ldconfig
@@ -827,6 +897,25 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libbd_s390.so
 %{_includedir}/blockdev/s390.h
 %endif
+
+%files smart
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_smart.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libbd_smart.so.3
+
+%files smart-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_smart.so
+%{_includedir}/blockdev/smart.h
+
+%files smartmontools
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_smartmontools.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libbd_smartmontools.so.3
+
+%files smartmontools-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libbd_smartmontools.so
 
 %files swap
 %defattr(644,root,root,755)
