@@ -41,6 +41,7 @@ BuildRequires:	python3-devel >= 1:3.2
 BuildRequires:	python3-modules >= 1:3.2
 %endif
 BuildRequires:	rpm-build >= 4.6
+# for <drivedb.h>
 BuildRequires:	smartmontools
 BuildRequires:	udev-devel >= 1:216
 BuildRequires:	volume_key-devel
