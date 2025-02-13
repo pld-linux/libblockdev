@@ -6,12 +6,12 @@
 Summary:	A library for low-level manipulation with block devices
 Summary(pl.UTF-8):	Biblioteka do niskopoziomowych operacji na urządzeniach blokowych
 Name:		libblockdev
-Version:	3.2.1
+Version:	3.3.0
 Release:	1
 License:	LGPL v2+
 Group:		Libraries
 Source0:	https://github.com/storaged-project/libblockdev/releases/download/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	31005f29e7af0ea31f1727b05fa25ca7
+# Source0-md5:	06a80f510fcea4412afe9e0bd4ac2187
 URL:		https://github.com/storaged-project/libblockdev
 BuildRequires:	autoconf >= 2.50
 BuildRequires:	automake
